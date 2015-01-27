@@ -83,7 +83,9 @@
   [this]
   (reset! repl-out *out*)
   (require 'cljs.repl.reflect)
-  (cljs.repl/analyze-source (:src this))
+  (try
+    (cljs.repl/analyze-source (:src this))
+    (catch Exception e (println (str "cljs.repl/analyze-source call failed | " (.getMessage e)))))
   (server/start
     (fn [data] (process-message this (read-string data)))
     :ip (:ip this)
